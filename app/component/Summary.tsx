@@ -12,10 +12,10 @@ function Category({title, score} : {title : string , score : number}){
         <div className='resume-summary'>
             <div className='category'>
                 <div className='flex flex-row gap-2 items-center'>
-                    <p className='text-2xl font-semibold'>{title}</p>
+                    <p className='text-xl font-semibold'>{title}</p>
                     <ScoreBadge score={score}/>
                 </div>
-                <div className='text-2xl font-[400]'>
+                <div className='text-xl font-[400]'>
                     <span className={textColor}>{score}</span>/100
                 </div>
             </div>
@@ -30,7 +30,7 @@ function Summary({feedback} : {feedback : Feedback}) {
             <ScoreGauge score={feedback?.overallScore | 0}/>
 
             <div className="flex flex-col gap-2">
-                    <h2 className="text-2xl font-bold">Your Resume Score</h2>
+                    <h2 className="text-xl font-bold">Your Resume Score</h2>
                     <p className="text-sm text-gray-500">
                         This score is calculated based on the variables listed below.
                     </p>

@@ -5,16 +5,16 @@ import Summary from '~/component/Summary'
 import Details from '~/component/Details'
 import Ats from '~/component/Ats'
 
-  export const meta = () => ([
-    { title: 'ResuAi | Review' },
-    { name: 'description', content: 'Details of your Resume' },
+export const meta = () => ([
+  { title: 'ResuAi | Review' },
+  { name: 'description', content: 'Details of your Resume' },
 ])
 
 
 function Resume() {
 
   const {auth ,fs, kv} = usePuterStore()
-  const id = useParams()
+  const {id} = useParams()
   const [resumeUrl , setResumeUrl] = useState("")
   const [imageUrl, setImageUrl] = useState("")
   const [feedback , setFeedback] = useState<Feedback | null>(null)
@@ -29,9 +29,13 @@ function Resume() {
     const load = async () => {
       const resume = await kv.get(`resume:${id}`)
 
+      console.log(resume)
+
       if(!resume) return 
 
-      const data = JSON.parse(resume)
+      const data = await JSON.parse(resume)
+
+      console.log(data)
 
       const resumeblob = await fs.read(data.resumePath);
       if(!resumeblob) return
@@ -44,9 +48,11 @@ function Resume() {
       setImageUrl(URL.createObjectURL(imageblob))
 
       setFeedback(data.feedback)
-    }
+    } 
 
-  }, []);
+    load();
+
+  }, [id]);
 
 
   return (
@@ -64,8 +70,8 @@ function Resume() {
 
           <div className='flex flex-row w-full max-lg:flex-col-reverse'>
             
-            <section className='feedback-section bg-[url("/images/bg-small.svg") bg-cover h-[100vh] sticky top-0 items-center justify-center'>
-              {/* {imageUrl && resumeUrl &&  */}{
+            <section className='feedback-section bg-[url("/images/bg-small.svg")] bg-cover h-[100vh] sticky top-0 items-center justify-center'>
+              {imageUrl && resumeUrl && 
               (
                 <div className=' gradient-border animate-in fade-in duration-1000 h-[90%] max-sm:m-0 max-w-2xl:h-fit w-fit'>
                     <a href={resumeUrl}>
@@ -83,10 +89,10 @@ function Resume() {
                 feedback ? 
                 (
                   <div className='flex flex-col gap-8 animate-in fade-in duration-1000'>
-                    <h1 className='text-4xl !text-black font-bold'>Resume Review</h1>
+                    <h1 className='!text-4xl !text-black font-bold'>Resume Review</h1>
                     <Summary feedback={feedback}/>
-                    <Ats />
-                    <Details/>
+                    <Ats score={feedback.ATS.score} suggestions={feedback.ATS.tips}/>
+                    <Details feedback={feedback}/>
                   </div>
                 ) 
                   : 
