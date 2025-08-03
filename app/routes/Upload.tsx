@@ -1,5 +1,5 @@
 import { prepareInstructions } from 'constant'
-import React, { useState, type FormEvent } from 'react'
+import React, { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import NavBar from '~/component/NavBar'
 import Uploder from '~/component/Uploder'
@@ -22,7 +22,8 @@ function Upload() {
     const navigate = useNavigate()
 
     const fileSubmit = (file : File | null) => {
-        setFile(file)
+        console.log(file);
+        setFile(file);
     }
 
     const handleAnalyze = async ({companyName , jobTitle , jobDescription , file}  :{ companyName: string, jobTitle: string, jobDescription: string, file: File  }) => {
@@ -69,7 +70,8 @@ function Upload() {
 
         await kv.set(`resume:${uuid}` , JSON.stringify(resume))
         setstatus("Analyzing complete , Redirecting...");
-        console.log(resume);
+        
+        setisprocessing(false)
         navigate(`/resume/${resume.id}`)
     }
 
@@ -89,6 +91,10 @@ function Upload() {
 
         handleAnalyze({companyName , jobTitle , jobDescription , file})
     }
+
+    useEffect(() => {
+        if (!auth.isAuthenticated) navigate(`/auth?next=/upload`);
+    }, [auth.isAuthenticated]);
 
     return (
         <main className="bg-[url('./images/bg-main.svg')] bg-cover ">
@@ -117,6 +123,7 @@ function Upload() {
                     (
 
                         <form onSubmit={handlesubmit} className='flex flex-col gap-4 mt-8 !w-4xl' id='form'>
+
                             <div className='form-div'>
                                 <label htmlFor='company-name'>Company Name</label>
                                 <input name='company-name' id='company-name' placeholder='Company Name'  />

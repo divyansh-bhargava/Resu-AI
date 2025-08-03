@@ -3,19 +3,21 @@ import { useDropzone } from 'react-dropzone'
 import { formatSize } from '~/lib/utils'
 
 interface uploaderprops {
-    fileSubmit? : (file : File | null) => void
+    fileSubmit : (file : File | null) => void
 }
 
 function Uploder({fileSubmit} : uploaderprops) {
+
+    const [file, setFile] = useState<File | null>();
 
     const maxFileSize = 20*1024*1024;
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
 
         console.log(acceptedFiles);
-        const file = acceptedFiles[0] || null;
-
-        fileSubmit?.(file)
+        const f = acceptedFiles[0] || null
+        setFile(f);
+        fileSubmit?.(f)
         
     }, [])
 
@@ -26,7 +28,6 @@ function Uploder({fileSubmit} : uploaderprops) {
         multiple: false
     })
 
-    const file = acceptedFiles[0] || null
 
     return (
         <div className='gradient-border w-full'>
@@ -43,10 +44,10 @@ function Uploder({fileSubmit} : uploaderprops) {
                                     />
                                     <div className='flex flex-col items-center justify-center '>
                                         <p className='text-sm font-medium text-gray-700 truncate max-w-xs'>{file?.name}</p>
-                                        <p className='text-sm text-gray-400'>{formatSize(file?.size)}</p>
+                                        <p className='text-sm text-gray-400'>{formatSize(file?.size) }</p>
                                     </div>
                                     <button
-                                        onClick={() => {fileSubmit?.(null) }}
+                                        onClick={() => {fileSubmit(null) ; setFile(null) }}
                                         className="p-2 cursor-pointer"
                                     >
                                         <img src="/icons/cross.svg" alt="remove" className="w-4 h-4" />
