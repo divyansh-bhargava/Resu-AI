@@ -22,7 +22,6 @@ function Upload() {
     const navigate = useNavigate()
 
     const fileSubmit = (file : File | null) => {
-        console.log(file);
         setFile(file);
     }
 
@@ -97,7 +96,7 @@ function Upload() {
     }, [auth.isAuthenticated]);
 
     return (
-        <main className="bg-[url('./images/bg-main.svg')] bg-cover ">
+        <main className="bg-[url('/images/bg-main.svg')] bg-cover ">
 
             <NavBar />
 
